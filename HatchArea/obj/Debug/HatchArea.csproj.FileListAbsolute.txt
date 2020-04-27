@@ -1,0 +1,5 @@
+c:\users\administrator\documents\visual studio 2015\Projects\HatchArea\HatchArea\bin\Debug\HatchArea.dll
+c:\users\administrator\documents\visual studio 2015\Projects\HatchArea\HatchArea\bin\Debug\HatchArea.pdb
+c:\users\administrator\documents\visual studio 2015\Projects\HatchArea\HatchArea\obj\Debug\HatchArea.csprojResolveAssemblyReference.cache
+c:\users\administrator\documents\visual studio 2015\Projects\HatchArea\HatchArea\obj\Debug\HatchArea.dll
+c:\users\administrator\documents\visual studio 2015\Projects\HatchArea\HatchArea\obj\Debug\HatchArea.pdb
