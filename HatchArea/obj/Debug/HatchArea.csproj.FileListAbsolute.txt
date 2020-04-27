@@ -3,3 +3,9 @@ c:\users\administrator\documents\visual studio 2015\Projects\HatchArea\HatchArea
 c:\users\administrator\documents\visual studio 2015\Projects\HatchArea\HatchArea\obj\Debug\HatchArea.csprojResolveAssemblyReference.cache
 c:\users\administrator\documents\visual studio 2015\Projects\HatchArea\HatchArea\obj\Debug\HatchArea.dll
 c:\users\administrator\documents\visual studio 2015\Projects\HatchArea\HatchArea\obj\Debug\HatchArea.pdb
+E:\MyOwnProject\HatchArea\HatchArea\bin\Debug\HatchArea.dll
+E:\MyOwnProject\HatchArea\HatchArea\bin\Debug\HatchArea.pdb
+E:\MyOwnProject\HatchArea\HatchArea\obj\Debug\HatchArea.csprojResolveAssemblyReference.cache
+E:\MyOwnProject\HatchArea\HatchArea\obj\Debug\HatchArea.dll
+E:\MyOwnProject\HatchArea\HatchArea\obj\Debug\HatchArea.pdb
+E:\MyOwnProject\HatchArea\HatchArea\bin\Debug\HatchArea.XML

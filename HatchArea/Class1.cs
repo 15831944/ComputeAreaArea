@@ -15,8 +15,11 @@ namespace HatchArea
 {
     public class HatchArea
     {
+      private readonly string[] _layArr = new string[] { "旱地", "果园", "有林地", "坑塘水面", "沟渠", "交通运输道路" };//要统计的图层
+
         [CommandMethod("JSMJ")]
-        public void jsmj()
+
+        public void ComputeArea()
         {
             Document doc = acadApp.DocumentManager.MdiActiveDocument;
             Database db = doc.Database;
@@ -29,9 +32,9 @@ namespace HatchArea
             if (ppr.Status != PromptStatus.OK) return;
 
             ObjectId currentTableId = createTable(db,ppr.Value);//创建表格
-            string[] layArr = new string[] {"旱地","果园","有林地","坑塘水面","沟渠","交通运输道路" };//要统计的图层
+          
             double sum_mj=0;
-            foreach (string layerName in layArr)
+            foreach (string layerName in _layArr)
             {
                 using (Transaction ts = db.TransactionManager.StartTransaction())
                 {
@@ -41,7 +44,7 @@ namespace HatchArea
                     //           where h.Layer == layerName
                     //           select h).ToList().Sum(p => p.Area);
                     if (ss == null)
-                        continue;//本涂层无对象，换个图层。
+                        continue;//本图层无对象，换个图层。
                     double mj = ss.Sum(h => h.Area);//正确
                     mj = mj / 10000; //换算为公顷
                     string mj2= Math.Round(mj, 4, MidpointRounding.AwayFromZero).ToString("f4");//保留4位
@@ -93,7 +96,7 @@ namespace HatchArea
                 //doc.SendCommand("ZOOM\nW\n"+ex.MinPoint.X+ "," +ex.MinPoint.Y + "\n" +ex.MaxPoint.X+","+ex.MaxPoint.Y+"\n");
                 ts.Commit();
             }
-            ed.WriteMessage("\n运行完毕!");
+            ed.WriteMessage("\n运行完毕!如有疑问请联系qq：985012864（CAD插件开发）");
         }
         //缩放到对象
         private void zoom_window (Editor ed ,Entity en)
@@ -117,8 +120,7 @@ namespace HatchArea
             string dxfname = RXClass.GetClass(typeof(T)).DxfName;
             //构建选择集过滤器   
             TypedValue[] values = { new TypedValue((int)DxfCode.Start, dxfname),
-                                    new TypedValue((int)DxfCode.LayerName, layerName),
-                                    new TypedValue((int)DxfCode.LayoutName,"Model")};
+                new TypedValue((int)DxfCode.LayoutName,"Model")};
             SelectionFilter filter = new SelectionFilter(values);
             //选择符合条件的所有实体
             PromptSelectionResult entSelected = ed.SelectAll(filter);
@@ -130,13 +132,13 @@ namespace HatchArea
                 foreach (ObjectId id in ss.GetObjectIds())
                 {
                     T h = ts.GetObject(id, mode, openErased) as T;
-                    if (h != null)
+                    if (h != null && h.Layer.Contains(layerName))
                         ents.Add(h);
                 }
             }
             return ents;
         }
-
+        
         private ObjectId createTable(Database db,Point3d insertPt)
         {
             ObjectId objID = ObjectId.Null;

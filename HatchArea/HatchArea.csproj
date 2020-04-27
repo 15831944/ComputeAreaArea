@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\HatchArea.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,11 +32,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="acdbmgd">
-      <HintPath>..\..\..\..\..\..\..\Program Files\AutoCAD 2010\acdbmgd.dll</HintPath>
+      <HintPath>C:\ObjectARX 2011\inc\AcDbMgd.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="acmgd">
-      <HintPath>..\..\..\..\..\..\..\Program Files\AutoCAD 2010\acmgd.dll</HintPath>
+      <HintPath>C:\ObjectARX 2011\inc\AcMgd.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DotNetARX, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -51,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
+    <Compile Include="CollectionHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
