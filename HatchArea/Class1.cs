@@ -27,6 +27,8 @@ namespace HatchArea
             //客户要求2010和2008均能运行
             string ver = acadApp.Version.ToString().Substring(0,2);//2010="18"
             ed.WriteMessage("\n支持的图层名：旱地，果园，有林地，坑塘水面，沟渠，交通运输道路\n其他图层不能被统计!");
+            //对模型空间中的块参照进行统计
+            var hatches = My_GetEntsInModelSpace<Hatch>(db, OpenMode.ForRead, false);
             //提示用户输入表格插入点
             PromptPointResult ppr = ed.GetPoint("\n请选择表格插入点:");
             if (ppr.Status != PromptStatus.OK) return;
@@ -38,14 +40,10 @@ namespace HatchArea
             {
                 using (Transaction ts = db.TransactionManager.StartTransaction())
                 {
-                    //对模型空间中的块参照进行统计
-                    var ss = My_GetEntsInModelSpace<Hatch>(db, OpenMode.ForRead, false, layerName);
-                    //var mj1 = (from h in ss
-                    //           where h.Layer == layerName
-                    //           select h).ToList().Sum(p => p.Area);
-                    if (ss == null)
+                    List<Hatch> currentHatches= hatches.Where(hatch => hatch.Layer.Contains(layerName)).ToList();
+                    if (currentHatches.Count==0)
                         continue;//本图层无对象，换个图层。
-                    double mj = ss.Sum(h => h.Area);//正确
+                    double mj = currentHatches.Sum(h => h.Area);//正确
                     mj = mj / 10000; //换算为公顷
                     string mj2= Math.Round(mj, 4, MidpointRounding.AwayFromZero).ToString("f4");//保留4位
                     sum_mj+= Convert.ToDouble(mj2);//总面积
@@ -113,7 +111,7 @@ namespace HatchArea
             ed.SetCurrentView(viewTableRecord);
             Application.UpdateScreen();
         }
-        private List<T> My_GetEntsInModelSpace<T>(Database db, OpenMode mode, bool openErased,string layerName) where T : Entity
+        private List<T> My_GetEntsInModelSpace<T>(Database db, OpenMode mode, bool openErased) where T : Entity
         {
             Editor ed = Application.DocumentManager.MdiActiveDocument.Editor;
             //获取类型T代表的DXF代码名用于构建选择集过滤器
@@ -123,18 +121,15 @@ namespace HatchArea
                 new TypedValue((int)DxfCode.LayoutName,"Model")};
             SelectionFilter filter = new SelectionFilter(values);
             //选择符合条件的所有实体
-            PromptSelectionResult entSelected = ed.SelectAll(filter);
+            PromptSelectionOptions pso=new PromptSelectionOptions();
+            pso.MessageForAdding = "\n请选择要统计的实体";
+            PromptSelectionResult entSelected = ed.GetSelection(pso,filter);
             if (entSelected.Status != PromptStatus.OK) return null;
             SelectionSet ss = entSelected.Value;
             List<T> ents = new List<T>();
             using (Transaction ts = db.TransactionManager.StartTransaction())
             {
-                foreach (ObjectId id in ss.GetObjectIds())
-                {
-                    T h = ts.GetObject(id, mode, openErased) as T;
-                    if (h != null && h.Layer.Contains(layerName))
-                        ents.Add(h);
-                }
+                ents.AddRange(ss.GetObjectIds().Select(id => ts.GetObject(id, mode, openErased)).OfType<T>());
             }
             return ents;
         }
@@ -150,9 +145,9 @@ namespace HatchArea
                 table.Position = insertPt;
 
                 table.SetSize(15,6);//设定行/列总数
-                table.SetRowHeight(1.5);     //设定行高
-                table.SetRowHeight(0, 2);//标题行高
-                table.SetColumnWidth(10);    //设定列宽
+                table.SetRowHeight(3.75);     //设定行高
+                table.SetRowHeight(0, 5);//标题行高
+                table.SetColumnWidth(25);    //设定列宽
 
                 //设定固定内容及合并单元格
                 table.SetTextString(0,0, "复垦后土地利用结构调查表");//（为了与2008兼容）SetTextString为2010版本以下的方法
@@ -262,7 +257,7 @@ namespace HatchArea
                     // 不加粗表格数据行的顶部边框
                     ts.SetGridLineWeight(LineWeight.LineWeight000, (int)GridLineType.HorizontalTop, (int)RowType.DataRow);
                     // 设置表格中所有行的文本高度为0.8
-                    ts.SetTextHeight( 0.8, TableTools.AllRows);
+                    ts.SetTextHeight( 2.5, TableTools.AllRows);
                     // 设置表格中所有行的对齐方式为正中
                     ts.SetAlignment(CellAlignment.MiddleCenter, TableTools.AllRows);
                     dict.UpgradeOpen();//切换表格样式字典为写的状态
