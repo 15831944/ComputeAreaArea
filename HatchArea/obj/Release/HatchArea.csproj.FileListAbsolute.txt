@@ -3,3 +3,4 @@ E:\MyOwnProject\HatchArea\HatchArea\bin\Release\HatchArea.pdb
 E:\MyOwnProject\HatchArea\HatchArea\bin\Release\DotNetARX.dll
 E:\MyOwnProject\HatchArea\HatchArea\obj\Release\HatchArea.dll
 E:\MyOwnProject\HatchArea\HatchArea\obj\Release\HatchArea.pdb
+E:\MyOwnProject\HatchArea\HatchArea\obj\Release\HatchArea.csprojResolveAssemblyReference.cache

@@ -45,7 +45,7 @@ namespace HatchArea
                         continue;//本图层无对象，换个图层。
                     double mj = currentHatches.Sum(h => h.Area);//正确
                     mj = mj / 10000; //换算为公顷
-                    string mj2= Math.Round(mj, 4, MidpointRounding.AwayFromZero).ToString("f4");//保留4位
+                    string mj2= Math.Round(mj, 4, MidpointRounding.AwayFromZero).ToString("f5");//保留4位
                     sum_mj+= Convert.ToDouble(mj2);//总面积
                     Table tb = currentTableId.GetObject(OpenMode.ForWrite, false) as Table;
 
@@ -67,13 +67,13 @@ namespace HatchArea
                         case "坑塘水面":
                             tb.SetTextString(9, 5, mj2);
                             temp = tb.Value(10, 5) as string;
-                            temp = Math.Round(Convert.ToDouble(temp) + Convert.ToDouble(mj2), 4, MidpointRounding.AwayFromZero).ToString("f4");
+                            temp = Math.Round(Convert.ToDouble(temp) + Convert.ToDouble(mj2), 4, MidpointRounding.AwayFromZero).ToString("f5");
                             tb.SetTextString(11, 5, temp);
                             break;
                         case "沟渠":
                             tb.SetTextString(10, 5, mj2);
                             temp = tb.Value(9, 5) as string;
-                            temp = Math.Round(Convert.ToDouble(temp) + Convert.ToDouble(mj2), 4, MidpointRounding.AwayFromZero).ToString("f4");
+                            temp = Math.Round(Convert.ToDouble(temp) + Convert.ToDouble(mj2), 4, MidpointRounding.AwayFromZero).ToString("f5");
                             tb.SetTextString(11, 5, temp);
                             break;
                         case "交通运输道路":
@@ -87,7 +87,7 @@ namespace HatchArea
             using (Transaction ts = db.TransactionManager.StartTransaction())
             {
                 Table tb = currentTableId.GetObject(OpenMode.ForWrite, false) as Table;
-                tb.SetTextString(14, 5, Math.Round(sum_mj, 4, MidpointRounding.AwayFromZero).ToString("f4"));//填写总面积
+                tb.SetTextString(14, 5, Math.Round(sum_mj, 4, MidpointRounding.AwayFromZero).ToString("f5"));//填写总面积
                 //缩放到对象
                 zoom_window(ed, tb);
                 //窗口缩放命令
@@ -139,7 +139,7 @@ namespace HatchArea
             ObjectId objID = ObjectId.Null;
             using (Transaction trans = db.TransactionManager.StartTransaction())
             {
-                ObjectId styleId = AddTableStyle("MyTable");//get样式，若未定义则新建
+                ObjectId styleId = AddTableStyle("MyNewTable");//get样式，若未定义则新建
                 Table table = new Table();
                 table.TableStyle = styleId;
                 table.Position = insertPt;
@@ -229,7 +229,7 @@ namespace HatchArea
                     if (c == 4)
                         table.SetTextString(r, c, "0");
                     else
-                        table.SetTextString(r, c, "0.0000");
+                        table.SetTextString(r, c, "0.00000");
                 }
             }
         }
